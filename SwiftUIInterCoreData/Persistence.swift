@@ -8,14 +8,15 @@
 import CoreData
 
 struct PersistenceController {
+    // Singleton !
     static let shared = PersistenceController()
 
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+        for x in 0..<10 {
+            let newFruit = FruitEntity(context: viewContext)
+            newFruit.name = "Apple \(x)"
         }
         do {
             try viewContext.save()
@@ -28,9 +29,12 @@ struct PersistenceController {
         return result
     }()
 
+    // creating containee
     let container: NSPersistentContainer
 
+    // initializing
     init(inMemory: Bool = false) {
+        // container holding all data
         container = NSPersistentContainer(name: "SwiftUIInterCoreData")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
